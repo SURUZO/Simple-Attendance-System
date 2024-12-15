@@ -1,6 +1,4 @@
 // controllers/userController.js
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 
 // Register User
@@ -38,6 +36,16 @@ exports.loginUser = async (req, res) => {
       expiresIn: '1d',
     });
     res.json({ token });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// Get all users with their IDs and usernames
+exports.getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find().select('_id username'); // Select only the _id and username fields
+    res.json(users);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
