@@ -1,4 +1,3 @@
-// controllers/attendanceController.js
 const Attendance = require('../models/Attendance');
 
 // Mark Attendance
@@ -20,7 +19,7 @@ exports.markAttendance = async (req, res) => {
   }
 };
 
-// Get Attendance Records (Admin view)
+// Get Attendance Records
 exports.getAttendance = async (req, res) => {
   const userId = req.user.role === 'admin' ? req.params.id : req.user.id;
 

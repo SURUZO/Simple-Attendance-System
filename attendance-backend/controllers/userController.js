@@ -7,12 +7,10 @@ exports.registerUser = async (req, res) => {
   const { username, password, role } = req.body;
 
   try {
-    // Validate role input
     if (role && !['user', 'admin'].includes(role)) {
       return res.status(400).json({ message: 'Invalid role specified' });
     }
 
-    // Hash password before storing it
     const hashedPassword = await bcrypt.hash(password, 12);
 
     const user = await User.create({
@@ -23,7 +21,6 @@ exports.registerUser = async (req, res) => {
 
     res.status(201).json({ message: 'User registered successfully', user });
   } catch (err) {
-    console.error('Error registering user:', err.message);
     res.status(500).json({ error: 'Server error during user registration' });
   }
 };
@@ -38,25 +35,17 @@ exports.loginUser = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Log stored password hash and compare result
-    const storedPasswordHash = user.password;
-    console.log('Stored Hash:', storedPasswordHash);
-
-    const isMatch = await bcrypt.compare(password, storedPasswordHash);
-    console.log('Password Match:', isMatch);
-
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
-    // Generate JWT token
     const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
       expiresIn: '1d',
     });
 
     res.json({ token });
   } catch (err) {
-    console.error('Error logging in user:', err.message);
     res.status(500).json({ error: 'Server error during login' });
   }
 };
@@ -67,7 +56,6 @@ exports.getAllUsers = async (req, res) => {
     const users = await User.find().select('_id username');
     res.json(users);
   } catch (err) {
-    console.error('Error fetching users:', err.message);
     res.status(500).json({ error: 'Server error while fetching users' });
   }
 };

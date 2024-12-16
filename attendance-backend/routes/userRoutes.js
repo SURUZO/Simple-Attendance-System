@@ -4,6 +4,6 @@ const router = express.Router();
 
 router.post('/register', registerUser);
 router.post('/login', loginUser);
-router.get('/all', getAllUsers); // New endpoint to list all users with IDs and usernames
+router.get('/all', getAllUsers);
 
 module.exports = router;
