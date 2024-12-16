@@ -38,8 +38,13 @@ exports.loginUser = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Compare provided password with the stored hashed password
-    const isMatch = await bcrypt.compare(password, user.password);
+    // Log stored password hash and compare result
+    const storedPasswordHash = user.password;
+    console.log('Stored Hash:', storedPasswordHash);
+
+    const isMatch = await bcrypt.compare(password, storedPasswordHash);
+    console.log('Password Match:', isMatch);
+
     if (!isMatch) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
