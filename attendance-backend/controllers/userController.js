@@ -24,7 +24,7 @@ exports.registerUser = async (req, res) => {
     res.status(201).json({ message: 'User registered successfully', user });
   } catch (err) {
     console.error('Error registering user:', err.message);
-    res.status(400).json({ error: err.message });
+    res.status(500).json({ error: 'Server error during user registration' });
   }
 };
 
@@ -48,10 +48,11 @@ exports.loginUser = async (req, res) => {
     const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
       expiresIn: '1d',
     });
+
     res.json({ token });
   } catch (err) {
     console.error('Error logging in user:', err.message);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Server error during login' });
   }
 };
 
@@ -62,6 +63,6 @@ exports.getAllUsers = async (req, res) => {
     res.json(users);
   } catch (err) {
     console.error('Error fetching users:', err.message);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Server error while fetching users' });
   }
 };
