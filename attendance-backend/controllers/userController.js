@@ -1,6 +1,8 @@
+// controllers/userController.js
+
 const bcrypt = require('bcryptjs');
 const User = require('../models/User');
-const jwt = require('jsonwebtoken'); // Ensure jwt is also imported
+const jwt = require('jsonwebtoken');
 
 // Register User
 exports.registerUser = async (req, res) => {
@@ -36,6 +38,7 @@ exports.loginUser = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
 
+    // Generate token with user ID and role
     const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
       expiresIn: '1d',
     });
