@@ -8,3 +8,4 @@ router.post('/login', loginUser);
 router.get('/all', getAllUsers); // New endpoint to list all users with IDs and usernames
 
 module.exports = router;
+
