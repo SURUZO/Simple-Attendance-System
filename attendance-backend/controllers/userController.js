@@ -1,5 +1,6 @@
-// controllers/userController.js
+const bcrypt = require('bcryptjs');
 const User = require('../models/User');
+const jwt = require('jsonwebtoken'); // Ensure jwt is also imported
 
 // Register User
 exports.registerUser = async (req, res) => {
@@ -10,9 +11,12 @@ exports.registerUser = async (req, res) => {
       return res.status(400).json({ message: 'Invalid role specified' });
     }
 
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
     const user = await User.create({
       username,
-      password,
+      password: hashedPassword,
       role: role || 'user', // Default to 'user' if no role is specified
     });
 
