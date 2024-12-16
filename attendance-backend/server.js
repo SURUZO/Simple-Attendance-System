@@ -9,9 +9,16 @@ dotenv.config();
 connectDB();
 
 const app = express();
-const allowedOrigins = process.env.FRONTEND_URL || 'http://localhost:3000';
 
-app.use(cors({ origin: allowedOrigins, credentials: true }));
+// Use cors middleware to enable CORS
+const allowedOrigins = process.env.FRONTEND_URL || 'http://localhost:3000'; // Replace with your frontend's URL
+app.use(cors({
+  origin: allowedOrigins,
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(express.json());
 app.use('/api/users', userRoutes);
 app.use('/api/attendance', attendanceRoutes);
