@@ -6,7 +6,6 @@ const AttendanceSchema = new mongoose.Schema({
   status: { type: String, enum: ['Present', 'Absent'], required: true },
 });
 
-// Compound index to ensure each user can only mark attendance once per day
-AttendanceSchema.index({ userId: 1, date: 1 }, { unique: true });
+// Removed compound index that enforced unique records per user and date
 
 module.exports = mongoose.model('Attendance', AttendanceSchema);
