@@ -1,6 +1,5 @@
-const bcrypt = require('bcryptjs');
+// controllers/userController.js
 const User = require('../models/User');
-const jwt = require('jsonwebtoken'); // Ensure jwt is also imported
 
 // Register User
 exports.registerUser = async (req, res) => {
@@ -11,12 +10,9 @@ exports.registerUser = async (req, res) => {
       return res.status(400).json({ message: 'Invalid role specified' });
     }
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
     const user = await User.create({
       username,
-      password: hashedPassword,
+      password,
       role: role || 'user', // Default to 'user' if no role is specified
     });
 
@@ -34,17 +30,13 @@ exports.loginUser = async (req, res) => {
     if (!user) return res.status(404).json({ message: 'User not found' });
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      console.error('Password mismatch');
-      return res.status(401).json({ message: 'Invalid credentials' });
-    }
+    if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
 
     const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
       expiresIn: '1d',
     });
     res.json({ token });
   } catch (err) {
-    console.error('Login error:', err.message);
     res.status(500).json({ error: err.message });
   }
 };
